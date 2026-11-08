@@ -1,0 +1,5 @@
+provider,account_number,customer_name,invoice_number,currency,period_start,period_end,invoice_date,due_date,electricity_kwh,base_charges,delivery_charges,energy_charges,taxes,additional_fees,total_due,total_basis,line_items_complete,utility_type
+Synthetic Utility,00123456,Synthetic Workshop,DEMO-001,USD,2026-01-01,2026-01-31,2026-01-31,2026-02-20,1000,10,30,100,10,0,150,current_charges,true,electricity
+Synthetic Utility,00123456,Synthetic Workshop,DEMO-002,USD,2026-02-01,2026-02-28,2026-02-28,2026-03-20,910,10,28,91,9,0,138,current_charges,true,electricity
+Synthetic Utility,00123456,Synthetic Workshop,DEMO-003,USD,2026-03-01,2026-03-31,2026-03-31,2026-04-20,1020,10,31,102,10,0,153,current_charges,true,electricity
+Synthetic Utility,00123456,Synthetic Workshop,DEMO-004,USD,2026-04-01,2026-04-30,2026-04-30,2026-05-20,1800,10,54,270,24,0,380,current_charges,true,electricity

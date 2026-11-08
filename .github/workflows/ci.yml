@@ -1,0 +1,51 @@
+name: Application checks
+
+on:
+  push:
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  test:
+    runs-on: ubuntu-24.04
+    strategy:
+      matrix:
+        python: ["3.11", "3.12"]
+    services:
+      postgres:
+        image: postgres:16
+        env:
+          POSTGRES_USER: utilityaudit_ci
+          POSTGRES_DB: postgres
+          POSTGRES_PASSWORD: disposable-ci-fixture-only
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd "pg_isready -U utilityaudit_ci -d postgres"
+          --health-interval 5s
+          --health-timeout 5s
+          --health-retries 10
+    env:
+      UTILITYAUDIT_TEST_POSTGRES_URL: postgresql+psycopg://utilityaudit_ci:disposable-ci-fixture-only@127.0.0.1:5432/postgres
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python }}
+          cache: pip
+          cache-dependency-path: requirements.lock
+      - name: Install locked dependencies and PostgreSQL client
+        run: |
+          python -m pip install -r requirements.lock
+          python -m pip install --no-deps -e .
+          sudo apt-get update -qq
+          sudo apt-get install -y postgresql-client-16
+      - name: Lint, test, evaluate and verify dependencies
+        run: |
+          ruff check utilityaudit app.py tests
+          ruff format --check utilityaudit app.py tests
+          pytest -q
+          utilityaudit evaluate samples/ground_truth.json
+          python -m pip check

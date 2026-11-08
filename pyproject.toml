@@ -1,0 +1,42 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "utilityaudit-ai"
+version = "0.2.0"
+description = "Local-first, evidence-based utility bill auditing"
+requires-python = ">=3.11"
+dependencies = [
+    "streamlit>=1.67,<2",
+    "pandas>=2.2,<3",
+    # NumPy 2.5 drops Python 3.11, which this application still supports.
+    "numpy>=1.26,<2.5",
+    "PyMuPDF>=1.24,<2",
+    "SQLAlchemy>=2.0,<3",
+    "cryptography>=44,<47",
+    "fastapi>=0.115,<1",
+    "uvicorn>=0.34,<1",
+    "python-multipart>=0.0.20,<1",
+]
+
+[project.optional-dependencies]
+test = ["pytest>=8,<9", "httpx>=0.28,<1", "ruff>=0.11,<1"]
+postgres = ["psycopg[binary]>=3.2,<4"]
+
+[project.scripts]
+utilityaudit = "utilityaudit.cli:main"
+
+[tool.setuptools.packages.find]
+include = ["utilityaudit*"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+markers = ["performance: bounded large-input regression tests", "postgres: requires UTILITYAUDIT_TEST_POSTGRES_URL"]
+
+[tool.ruff]
+target-version = "py311"
+line-length = 120
+
+[tool.ruff.lint]
+select = ["E4", "E7", "E9", "F", "I"]
